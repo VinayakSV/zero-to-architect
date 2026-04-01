@@ -6,7 +6,7 @@ import {
   Collapse,
 } from '@mui/material';
 import {
-  Dashboard, MenuBook, StickyNote2, Home,
+  Dashboard, MenuBook, StickyNote2, Home, Gavel,
   ExpandLess, ExpandMore, Circle,
 } from '@mui/icons-material';
 import tutorialRegistry, {
@@ -228,6 +228,16 @@ export default function Sidebar({ open, onClose }) {
           >
             <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}><StickyNote2 /></ListItemIcon>
             <ListItemText primary="Notes" primaryTypographyProps={{ fontWeight: 500, fontSize: '0.9rem' }} />
+          </ListItemButton>
+
+          {/* License */}
+          <ListItemButton
+            selected={isPathActive('/license')}
+            onClick={() => handleNav('/license')}
+            sx={navItemSx(isPathActive('/license'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}><Gavel /></ListItemIcon>
+            <ListItemText primary="License" primaryTypographyProps={{ fontWeight: 500, fontSize: '0.9rem' }} />
           </ListItemButton>
         </List>
       </Box>

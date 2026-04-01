@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import {
   Menu, DarkMode, LightMode, Home, Dashboard, MenuBook,
-  StickyNote2, Search, Close,
+  StickyNote2, Search, Close, Gavel,
 } from '@mui/icons-material';
 import useThemeMode from '../../hooks/useThemeMode';
 import tutorialRegistry, { getCategoryIcon } from '../../features/tutorials/tutorialRegistry';
@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { label: 'Dashboard', path: '/dashboard', icon: <Dashboard fontSize="small" /> },
   { label: 'Tutorials', path: '/tutorials', icon: <MenuBook fontSize="small" /> },
   { label: 'Notes', path: '/notes', icon: <StickyNote2 fontSize="small" /> },
+  { label: 'License', path: '/license', icon: <Gavel fontSize="small" /> },
 ];
 
 export default function Header({ onMenuClick }) {

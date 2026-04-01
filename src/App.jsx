@@ -10,6 +10,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Tutorials = lazy(() => import('./pages/Tutorials'));
 const TutorialDetail = lazy(() => import('./pages/TutorialDetail'));
 const Notes = lazy(() => import('./pages/Notes'));
+const LicenseReport = lazy(() => import('./pages/LicenseReport'));
 
 function PageLoader() {
   return (
@@ -22,7 +23,7 @@ function PageLoader() {
 export default function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter basename="/tech-tutorial">
+      <BrowserRouter basename="/zero-to-architect">
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Landing />} />
@@ -32,6 +33,7 @@ export default function App() {
               <Route path="/tutorials" element={<Tutorials />} />
               <Route path="/tutorials/:id" element={<TutorialDetail />} />
               <Route path="/notes" element={<Notes />} />
+              <Route path="/license" element={<LicenseReport />} />
             </Route>
           </Routes>
         </Suspense>
