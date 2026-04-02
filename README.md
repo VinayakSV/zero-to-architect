@@ -470,7 +470,7 @@ The project includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) 
    git init
    git add .
    git commit -m "Initial commit"
-   git branch -M main
+   git branch -M master
    git remote add origin https://github.com/<your-username>/tech-tutorial.git
    git push -u origin main
    ```
