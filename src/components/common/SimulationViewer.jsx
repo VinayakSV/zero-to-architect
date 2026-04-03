@@ -123,7 +123,7 @@ const SimulationViewer = memo(function SimulationViewer({ config }) {
   const [stepIdx, setStepIdx] = useState(-1);
   const [playing, setPlaying] = useState(false);
   const [packetProgress, setPacketProgress] = useState(0);
-  const [speedIdx, setSpeedIdx] = useState(2); // default 1x
+  const [speedIdx, setSpeedIdx] = useState(0); // default 0.5x
   const intervalRef = useRef(null);
   const packetRef = useRef(null);
 
@@ -266,58 +266,20 @@ const SimulationViewer = memo(function SimulationViewer({ config }) {
       {/* Controls */}
       <Box sx={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        gap: { xs: 0.25, sm: 0.75 }, py: 1, px: 1,
+        gap: { xs: 0.25, sm: 0.5 }, py: 0.75, px: 1,
         borderTop: '1px solid', borderColor: 'divider',
-        flexWrap: 'wrap',
       }}>
-        {/* Speed down */}
-        <Tooltip title="Slower">
-          <span><IconButton size="small" onClick={handleSlower} disabled={speedIdx === 0}>
-            <Remove fontSize="small" />
-          </IconButton></span>
-        </Tooltip>
-
-        {/* Speed label */}
-        <Chip
-          label={`${speed}x`}
-          size="small"
-          sx={{
-            fontSize: '0.72rem', height: 24, minWidth: 42, fontWeight: 700,
-            bgcolor: speed === 1 ? 'transparent' : 'primary.main',
-            color: speed === 1 ? 'text.secondary' : '#fff',
-            border: '1px solid', borderColor: speed === 1 ? 'divider' : 'primary.main',
-          }}
-        />
-
-        {/* Speed up */}
-        <Tooltip title="Faster">
-          <span><IconButton size="small" onClick={handleFaster} disabled={speedIdx === SPEEDS.length - 1}>
-            <Add fontSize="small" />
-          </IconButton></span>
-        </Tooltip>
-
-        <Box sx={{ width: 1, height: 20, bgcolor: 'divider', mx: { xs: 0.25, sm: 0.5 } }} />
-
-        {/* Playback controls */}
-        <Tooltip title="Reset">
-          <IconButton size="small" onClick={handleReset}><Replay fontSize="small" /></IconButton>
-        </Tooltip>
-        <Tooltip title="Previous Step">
-          <span><IconButton size="small" onClick={handlePrev} disabled={atStart && stepIdx <= 0}>
-            <SkipPrevious fontSize="small" />
-          </IconButton></span>
-        </Tooltip>
+        <Tooltip title="Reset"><IconButton size="small" onClick={handleReset}><Replay fontSize="small" /></IconButton></Tooltip>
+        <Tooltip title="Previous"><span><IconButton size="small" onClick={handlePrev} disabled={atStart && stepIdx <= 0}><SkipPrevious fontSize="small" /></IconButton></span></Tooltip>
+        <Tooltip title="Slower"><span><IconButton size="small" onClick={handleSlower} disabled={speedIdx === 0}><Remove fontSize="small" /></IconButton></span></Tooltip>
         <Tooltip title={playing ? 'Pause' : 'Play'}>
-          <IconButton size="small" onClick={playing ? handlePause : handlePlay} color="primary"
-            sx={{ bgcolor: 'primary.main', color: '#fff', '&:hover': { bgcolor: 'primary.dark' }, mx: 0.5 }}>
-            {playing ? <Pause fontSize="small" /> : <PlayArrow fontSize="small" />}
+          <IconButton onClick={playing ? handlePause : handlePlay} sx={{ bgcolor: 'primary.main', color: '#fff', width: 34, height: 34, '&:hover': { bgcolor: 'primary.dark' } }}>
+            {playing ? <Pause sx={{ fontSize: 18 }} /> : <PlayArrow sx={{ fontSize: 18 }} />}
           </IconButton>
         </Tooltip>
-        <Tooltip title="Next Step">
-          <span><IconButton size="small" onClick={handleNext} disabled={atEnd}>
-            <SkipNext fontSize="small" />
-          </IconButton></span>
-        </Tooltip>
+        <Tooltip title="Faster"><span><IconButton size="small" onClick={handleFaster} disabled={speedIdx === SPEEDS.length - 1}><Add fontSize="small" /></IconButton></span></Tooltip>
+        <Tooltip title="Next"><span><IconButton size="small" onClick={handleNext} disabled={atEnd}><SkipNext fontSize="small" /></IconButton></span></Tooltip>
+        <Chip label={`${speed}x`} size="small" sx={{ fontSize: '0.68rem', height: 20, minWidth: 36, fontWeight: 700, bgcolor: speed !== 1 ? 'primary.main' : 'transparent', color: speed !== 1 ? '#fff' : 'text.secondary', border: '1px solid', borderColor: speed !== 1 ? 'primary.main' : 'divider' }} />
       </Box>
     </Box>
   );
