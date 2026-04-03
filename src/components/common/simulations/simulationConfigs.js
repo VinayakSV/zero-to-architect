@@ -430,61 +430,7 @@ export const trafficControlSim = {
   ],
 };
 
-// Master lookup: tutorial ID → simulation config
-export const simulationMap = {
-  // System Design
-  'rate-limiter': rateLimiterSim,
-  'design-rate-limiter-distributed': rateLimiterSim,
-  'cdn-deep-dive': cdnSim,
-  'load-balancing': loadBalancerSim,
-  'design-ride-sharing': rideSharingSim,
-  'design-atm': atmSim,
-  'design-netflix': netflixSim,
-  'design-chat-system': chatSim,
-  'design-web-crawler': webCrawlerSim,
-  'design-newsfeed': newsfeedSim,
-  'design-url-shortener': urlShortenerSim,
-  'url-shortener': urlShortenerSim,
-  'design-typeahead': typeaheadSim,
-  'design-cloud-storage': cloudStorageSim,
-  'design-recommendation': recommendationSim,
-  'design-parking-lot': parkingLotSim,
-  'design-traffic-control': trafficControlSim,
-  'design-forum': newsfeedSim,
-  'design-tic-tac-toe': parkingLotSim,
-  'payment-gateway': paymentGatewaySim,
-  'stock-trading-platform': stockTradingSim,
-  'fraud-detection-system': fraudDetectionSim,
-  'notification-system': newsfeedSim,
-  'cache-system': cdnSim,
-  // Real-World Builds
-  'data-ingestion-platform': dataIngestionSim,
-  'live-streaming-platform': liveStreamingSim,
-  // Architecture Decisions
-  'database-decisions': databaseDecisionsSim,
-  'caching-strategy': cachingStrategySim,
-  'messaging-decisions': messagingDecisionsSim,
-  'auth-security-decisions': authSecuritySim,
-  'cloud-infra-decisions': cloudInfraDecisionsSim,
-  'ai-in-system-design': aiInSystemDesignSim,
-  // Microservices
-  'microservices-patterns': microservicesPatternsSim,
-  'service-communication': serviceCommunicationSim,
-  'api-gateway-pattern': apiGatewayPatternSim,
-  'distributed-transactions': distributedTransactionsSim,
-  'kafka-deep-dive': kafkaDeepDiveSim,
-  'service-discovery': serviceDiscoverySim,
-  // Java
-  'hashmap-internals': hashmapSim,
-  'concurrent-hashmap': concurrentHashmapSim,
-  'multithreading': multithreadingSim,
-  'completable-future': completableFutureSim,
-  'java8-features': java8Sim,
-  'java17-features': java17Sim,
-  'java-memory-model': javaMemoryModelSim,
-  'java-coding-standards': codingStandardsSim,
-  'reactive-programming': reactiveSim,
-};
+
 
 
 export const paymentGatewaySim = {
@@ -941,3 +887,67 @@ export const java8Sim = completableFutureSim; // streams/lambdas are similar asy
 export const java17Sim = hashmapSim; // records/sealed classes are similar data structure concept
 export const codingStandardsSim = microservicesPatternsSim; // reuse patterns concept
 export const reactiveSim = completableFutureSim; // reactive is similar async pipeline
+
+// Master lookup: tutorial ID → simulation config
+export const simulationMap = {
+  // System Design
+  'rate-limiter': rateLimiterSim,
+  'design-rate-limiter-distributed': rateLimiterSim,
+  'cdn-deep-dive': cdnSim,
+  'load-balancing': loadBalancerSim,
+  'design-ride-sharing': rideSharingSim,
+  'design-atm': atmSim,
+  'design-netflix': netflixSim,
+  'design-chat-system': chatSim,
+  'design-web-crawler': webCrawlerSim,
+  'design-newsfeed': newsfeedSim,
+  'design-url-shortener': urlShortenerSim,
+  'url-shortener': urlShortenerSim,
+  'design-typeahead': typeaheadSim,
+  'design-cloud-storage': cloudStorageSim,
+  'design-recommendation': recommendationSim,
+  'design-parking-lot': parkingLotSim,
+  'design-traffic-control': trafficControlSim,
+  'design-forum': newsfeedSim,
+  'design-tic-tac-toe': parkingLotSim,
+  'payment-gateway': paymentGatewaySim,
+  'stock-trading-platform': stockTradingSim,
+  'fraud-detection-system': fraudDetectionSim,
+  'notification-system': newsfeedSim,
+  'cache-system': cdnSim,
+  // Real-World Builds
+  'data-ingestion-platform': dataIngestionSim,
+  'live-streaming-platform': liveStreamingSim,
+  // Architecture Decisions
+  'database-decisions': databaseDecisionsSim,
+  'caching-strategy': cachingStrategySim,
+  'messaging-decisions': messagingDecisionsSim,
+  'auth-security-decisions': authSecuritySim,
+  'cloud-infra-decisions': cloudInfraDecisionsSim,
+  'ai-in-system-design': aiInSystemDesignSim,
+  // Microservices
+  'microservices-patterns': microservicesPatternsSim,
+  'service-communication': serviceCommunicationSim,
+  'api-gateway-pattern': apiGatewayPatternSim,
+  'distributed-transactions': distributedTransactionsSim,
+  'kafka-deep-dive': kafkaDeepDiveSim,
+  'service-discovery': serviceDiscoverySim,
+  // Java
+  'hashmap-internals': hashmapSim,
+  'concurrent-hashmap': concurrentHashmapSim,
+  'multithreading': multithreadingSim,
+  'completable-future': completableFutureSim,
+  'java8-features': java8Sim,
+  'java17-features': java17Sim,
+  'java-memory-model': javaMemoryModelSim,
+  'java-coding-standards': codingStandardsSim,
+  'reactive-programming': reactiveSim,
+  // LLD
+  'lld-elevator': loadBalancerSim,
+  'lld-snake-ladder': parkingLotSim,
+  'lld-bookmyshow': paymentGatewaySim,
+  'lld-splitwise': distributedTransactionsSim,
+  'lld-library': databaseDecisionsSim,
+  'lld-vending-machine': atmSim,
+  'lld-chess': parkingLotSim,
+};
