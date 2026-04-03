@@ -943,6 +943,7 @@ export const simulationMap = {
   'java-coding-standards': codingStandardsSim,
   'reactive-programming': reactiveSim,
   // LLD
+  'lld-thinking-framework': microservicesPatternsSim,
   'lld-elevator': loadBalancerSim,
   'lld-snake-ladder': parkingLotSim,
   'lld-bookmyshow': paymentGatewaySim,

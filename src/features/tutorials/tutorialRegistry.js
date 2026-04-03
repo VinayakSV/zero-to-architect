@@ -235,6 +235,15 @@ const tutorialRegistry = [
 
   // ── Low-Level Design (LLD) ──
   {
+    id: 'lld-thinking-framework',
+    title: 'How to Think in LLD',
+    description: 'The mental framework — how to break ANY problem into classes, patterns, and relationships from scratch',
+    category: 'Low-Level Design',
+    subcategory: 'Foundation',
+    icon: Extension,
+    tags: ['LLD', 'OOP', 'SOLID', 'Design Patterns', 'Framework', 'Thinking'],
+  },
+  {
     id: 'lld-elevator',
     title: 'Design Elevator System',
     description: 'OOP design — scheduling algorithms, state machine, multi-elevator coordination, SOLID principles',

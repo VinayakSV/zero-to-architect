@@ -1,4 +1,6 @@
-# Design Elevator System — The Restaurant Waiter Analogy
+# Design Elevator System — Applying the 7-Step LLD Framework
+
+> **Prerequisite**: Read [How to Think in LLD](./lld-thinking-framework.md) first. This tutorial applies that framework step by step.
 
 ## The Restaurant Waiter Analogy
 

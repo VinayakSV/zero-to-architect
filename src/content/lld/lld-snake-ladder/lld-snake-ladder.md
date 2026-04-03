@@ -1,4 +1,6 @@
-# Design Snake & Ladder Game — The Board Game Blueprint
+# Design Snake & Ladder Game — Applying the 7-Step LLD Framework
+
+> **Prerequisite**: Read [How to Think in LLD](./lld-thinking-framework.md) first. This tutorial applies that framework step by step.
 
 ## The Blueprint Analogy
 
