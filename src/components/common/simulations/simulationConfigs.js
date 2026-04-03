@@ -891,6 +891,7 @@ export const reactiveSim = completableFutureSim; // reactive is similar async pi
 // Master lookup: tutorial ID → simulation config
 export const simulationMap = {
   // System Design
+  'thinking-system-design': loadBalancerSim,
   'rate-limiter': rateLimiterSim,
   'design-rate-limiter-distributed': rateLimiterSim,
   'cdn-deep-dive': cdnSim,
@@ -919,6 +920,7 @@ export const simulationMap = {
   'data-ingestion-platform': dataIngestionSim,
   'live-streaming-platform': liveStreamingSim,
   // Architecture Decisions
+  'thinking-architecture': databaseDecisionsSim,
   'database-decisions': databaseDecisionsSim,
   'caching-strategy': cachingStrategySim,
   'messaging-decisions': messagingDecisionsSim,
@@ -926,6 +928,7 @@ export const simulationMap = {
   'cloud-infra-decisions': cloudInfraDecisionsSim,
   'ai-in-system-design': aiInSystemDesignSim,
   // Microservices
+  'thinking-microservices': microservicesPatternsSim,
   'microservices-patterns': microservicesPatternsSim,
   'service-communication': serviceCommunicationSim,
   'api-gateway-pattern': apiGatewayPatternSim,
@@ -933,6 +936,7 @@ export const simulationMap = {
   'kafka-deep-dive': kafkaDeepDiveSim,
   'service-discovery': serviceDiscoverySim,
   // Java
+  'thinking-java': hashmapSim,
   'hashmap-internals': hashmapSim,
   'concurrent-hashmap': concurrentHashmapSim,
   'multithreading': multithreadingSim,

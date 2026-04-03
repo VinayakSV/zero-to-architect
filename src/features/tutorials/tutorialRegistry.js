@@ -13,6 +13,15 @@ import {
 const tutorialRegistry = [
   // ── System Design ──
   {
+    id: 'thinking-system-design',
+    title: 'How to Think in System Design',
+    description: 'The mental framework — how to approach ANY system design problem from scratch, step by step',
+    category: 'System Design',
+    subcategory: 'Foundation',
+    icon: Architecture,
+    tags: ['HLD', 'Framework', 'Thinking', 'Estimation', 'Trade-offs'],
+  },
+  {
     id: 'url-shortener',
     title: 'URL Shortener',
     description: 'Design a scalable URL shortening service like TinyURL / Bitly',
@@ -329,6 +338,15 @@ const tutorialRegistry = [
 
   // ── Architecture Decisions ──
   {
+    id: 'thinking-architecture',
+    title: 'How to Think in Architecture',
+    description: 'The mental framework — how to evaluate trade-offs, pick technologies, and make decisions you won\'t regret',
+    category: 'Architecture Decisions',
+    subcategory: 'Foundation',
+    icon: CompareArrows,
+    tags: ['Architecture', 'Framework', 'Thinking', 'Trade-offs', 'Decision Making'],
+  },
+  {
     id: 'database-decisions',
     title: 'Database Decisions',
     description: 'SQL vs NoSQL, sharding strategies, indexing, schema design — when to pick what and why',
@@ -385,6 +403,15 @@ const tutorialRegistry = [
 
   // ── Microservices ──
   {
+    id: 'thinking-microservices',
+    title: 'How to Think in Microservices',
+    description: 'The mental framework — when to split, how to communicate, what patterns to apply and WHY',
+    category: 'Microservices',
+    subcategory: 'Foundation',
+    icon: Hub,
+    tags: ['Microservices', 'Framework', 'Thinking', 'Monolith', 'Trade-offs'],
+  },
+  {
     id: 'microservices-patterns',
     title: 'Microservices Patterns',
     description: 'Saga, CQRS, Event Sourcing, Circuit Breaker — when and why to use each',
@@ -440,6 +467,15 @@ const tutorialRegistry = [
   },
 
   // ── Java Core ──
+  {
+    id: 'thinking-java',
+    title: 'How to Think in Java',
+    description: 'The mental framework — how to pick the right collection, concurrency tool, and Java feature for any problem',
+    category: 'Java',
+    subcategory: 'Foundation',
+    icon: Code,
+    tags: ['Java', 'Framework', 'Thinking', 'Collections', 'Concurrency'],
+  },
   {
     id: 'hashmap-internals',
     title: 'HashMap Internals',
