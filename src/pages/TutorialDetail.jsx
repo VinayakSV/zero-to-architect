@@ -10,6 +10,8 @@ import {
 } from '@mui/icons-material';
 import MarkdownViewer from '../components/common/MarkdownViewer';
 import InterviewPanel from '../components/common/InterviewPanel';
+import SimulationViewer from '../components/common/SimulationViewer';
+import { simulationMap } from '../components/common/simulations/simulationConfigs';
 import { getTutorialById, getAdjacentTutorials } from '../features/tutorials/tutorialRegistry';
 
 // Build lookup map once at module level
@@ -227,6 +229,11 @@ export default function TutorialDetail() {
           )}
         </Paper>
       </Collapse>
+
+      {/* Animated Simulation */}
+      {!loading && !subPage && simulationMap[id] && (
+        <SimulationViewer config={simulationMap[id]} />
+      )}
 
       {/* Content */}
       {loading ? (
