@@ -43,8 +43,8 @@ const InterviewPanel = memo(function InterviewPanel({ content }) {
           color="error"
           sx={{
             position: 'fixed',
-            bottom: 88,
-            right: 28,
+            bottom: { xs: 80, sm: 88 },
+            right: { xs: 16, sm: 28 },
             zIndex: 1200,
           }}
         >

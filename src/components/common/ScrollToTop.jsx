@@ -64,8 +64,8 @@ export default function ScrollToTop({ scrollRef }) {
           aria-label="scroll to top"
           sx={{
             position: 'absolute',
-            bottom: 24,
-            right: 24,
+            bottom: { xs: 16, sm: 24 },
+            right: { xs: 16, sm: 24 },
             zIndex: 10,
           }}
         >

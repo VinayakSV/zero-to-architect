@@ -33,7 +33,7 @@ export default function Layout() {
             sx={{
               height: '100%',
               overflow: 'auto',
-              p: { xs: 2, sm: 3, md: 4 },
+              p: { xs: 1.5, sm: 2, md: 4 },
               maxWidth: 1200,
               width: '100%',
               mx: 'auto',

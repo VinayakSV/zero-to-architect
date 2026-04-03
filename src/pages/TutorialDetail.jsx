@@ -128,51 +128,57 @@ export default function TutorialDetail() {
   return (
     <Box>
       {/* Header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-        <IconButton onClick={() => subPage ? handleBackToMain() : navigate(-1)}>
-          <ArrowBack />
-        </IconButton>
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography variant="h5" sx={{ fontWeight: 700 }} noWrap>
+      <Box sx={{ mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton onClick={() => subPage ? handleBackToMain() : navigate(-1)} size="small">
+            <ArrowBack />
+          </IconButton>
+          <Typography variant="h5" sx={{ fontWeight: 700, flex: 1, minWidth: 0, fontSize: { xs: '1.2rem', sm: '1.5rem' } }} noWrap>
             {tutorial?.title || id}
           </Typography>
-          <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
-            {tutorial?.subcategory && (
-              <Chip label={tutorial.subcategory} size="small" color="primary" sx={{ fontSize: '0.7rem', height: 22 }} />
-            )}
-            {readingTime && !loading && (
-              <Chip
-                icon={<AccessTime sx={{ fontSize: '0.8rem !important' }} />}
-                label={readingTime}
-                size="small"
-                variant="outlined"
-                sx={{ fontSize: '0.7rem', height: 22 }}
-              />
-            )}
-            {subPage && (
-              <Chip
-                label={subPage.replace(/-/g, ' ')}
-                size="small"
-                variant="outlined"
-                color="secondary"
-                onDelete={handleBackToMain}
-                sx={{ fontSize: '0.7rem', height: 22 }}
-              />
-            )}
-            {!subPage && tutorial?.tags?.map((tag) => (
-              <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ fontSize: '0.7rem', height: 22 }} />
-            ))}
-          </Box>
+          <IconButton
+            size="small"
+            onClick={() => setNotesOpen(!notesOpen)}
+            sx={{
+              border: '1px solid', borderColor: notesOpen ? 'primary.main' : 'divider',
+              bgcolor: notesOpen ? 'primary.main' : 'transparent',
+              color: notesOpen ? '#fff' : 'text.secondary',
+              '&:hover': { bgcolor: notesOpen ? 'primary.dark' : 'action.hover' },
+            }}
+          >
+            <NoteAdd fontSize="small" />
+          </IconButton>
         </Box>
-        <Button
-          size="small"
-          variant={notesOpen ? 'contained' : 'outlined'}
-          startIcon={<NoteAdd />}
-          onClick={() => setNotesOpen(!notesOpen)}
-          sx={{ textTransform: 'none', borderRadius: 2, flexShrink: 0 }}
-        >
-          Notes {notes.length > 0 && `(${notes.length})`}
-        </Button>
+        <Box sx={{ display: 'flex', gap: 0.5, mt: 0.75, flexWrap: 'wrap', alignItems: 'center', pl: { xs: 0, sm: 4.5 } }}>
+          {tutorial?.subcategory && (
+            <Chip label={tutorial.subcategory} size="small" color="primary" sx={{ fontSize: '0.7rem', height: 22 }} />
+          )}
+          {readingTime && !loading && (
+            <Chip
+              icon={<AccessTime sx={{ fontSize: '0.8rem !important' }} />}
+              label={readingTime}
+              size="small"
+              variant="outlined"
+              sx={{ fontSize: '0.7rem', height: 22 }}
+            />
+          )}
+          {notes.length > 0 && (
+            <Chip label={`${notes.length} note${notes.length > 1 ? 's' : ''}`} size="small" variant="outlined" sx={{ fontSize: '0.7rem', height: 22 }} />
+          )}
+          {subPage && (
+            <Chip
+              label={subPage.replace(/-/g, ' ')}
+              size="small"
+              variant="outlined"
+              color="secondary"
+              onDelete={handleBackToMain}
+              sx={{ fontSize: '0.7rem', height: 22 }}
+            />
+          )}
+          {!subPage && tutorial?.tags?.map((tag) => (
+            <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ fontSize: '0.7rem', height: 22 }} />
+          ))}
+        </Box>
       </Box>
 
       {/* Notes panel */}
@@ -238,7 +244,7 @@ export default function TutorialDetail() {
       {!loading && !subPage && (prev || next) && (
         <>
           <Divider sx={{ mt: 6, mb: 3 }} />
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mb: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', gap: 2, mb: 2 }}>
             {prev ? (
               <Box
                 onClick={() => navigate(`/tutorials/${prev.id}`)}

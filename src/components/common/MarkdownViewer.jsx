@@ -9,19 +9,19 @@ import MermaidDiagram from './MermaidDiagram';
 import useThemeMode from '../../hooks/useThemeMode';
 
 const markdownSx = {
-  '& h1': { fontSize: '2rem', fontWeight: 700, mt: 4, mb: 2, color: 'primary.main' },
-  '& h2': { fontSize: '1.6rem', fontWeight: 600, mt: 3, mb: 1.5, color: 'text.primary', borderBottom: '1px solid', borderColor: 'divider', pb: 1 },
-  '& h3': { fontSize: '1.3rem', fontWeight: 600, mt: 2.5, mb: 1, color: 'text.primary' },
-  '& h4': { fontSize: '1.1rem', fontWeight: 600, mt: 2, mb: 1 },
-  '& p': { mb: 2, lineHeight: 1.8, color: 'text.secondary' },
-  '& ul, & ol': { pl: 3, mb: 2, color: 'text.secondary' },
-  '& li': { mb: 0.5, lineHeight: 1.7 },
+  '& h1': { fontSize: { xs: '1.5rem', sm: '2rem' }, fontWeight: 700, mt: 4, mb: 2, color: 'primary.main' },
+  '& h2': { fontSize: { xs: '1.25rem', sm: '1.6rem' }, fontWeight: 600, mt: 3, mb: 1.5, color: 'text.primary', borderBottom: '1px solid', borderColor: 'divider', pb: 1 },
+  '& h3': { fontSize: { xs: '1.1rem', sm: '1.3rem' }, fontWeight: 600, mt: 2.5, mb: 1, color: 'text.primary' },
+  '& h4': { fontSize: { xs: '1rem', sm: '1.1rem' }, fontWeight: 600, mt: 2, mb: 1 },
+  '& p': { mb: 2, lineHeight: 1.8, color: 'text.secondary', fontSize: { xs: '0.9rem', sm: '1rem' } },
+  '& ul, & ol': { pl: { xs: 2, sm: 3 }, mb: 2, color: 'text.secondary' },
+  '& li': { mb: 0.5, lineHeight: 1.7, fontSize: { xs: '0.9rem', sm: '1rem' } },
   '& blockquote': {
     borderLeft: '4px solid', borderColor: 'primary.main',
     pl: 2, py: 0.5, my: 2, bgcolor: 'action.hover', borderRadius: '0 8px 8px 0',
   },
-  '& table': { width: '100%', borderCollapse: 'collapse', my: 2, display: 'block', overflowX: 'auto' },
-  '& th, & td': { border: '1px solid', borderColor: 'divider', p: 1.5, textAlign: 'left', whiteSpace: 'nowrap' },
+  '& table': { width: '100%', borderCollapse: 'collapse', my: 2, display: 'block', overflowX: 'auto', WebkitOverflowScrolling: 'touch' },
+  '& th, & td': { border: '1px solid', borderColor: 'divider', p: { xs: 0.75, sm: 1.5 }, textAlign: 'left', fontSize: { xs: '0.78rem', sm: '0.875rem' } },
   '& th': { bgcolor: 'action.hover', fontWeight: 600 },
   '& code:not(pre code)': {
     bgcolor: 'var(--code-bg)', px: 0.8, py: 0.2, borderRadius: 1,
@@ -77,7 +77,7 @@ const MarkdownViewer = memo(function MarkdownViewer({ content, onNavigate }) {
             style={mode === 'dark' ? oneDark : oneLight}
             language={lang}
             PreTag="div"
-            customStyle={{ margin: 0, borderRadius: 0, fontSize: '0.875rem' }}
+            customStyle={{ margin: 0, borderRadius: 0, fontSize: '0.8rem' }}
             {...props}
           >
             {codeStr}
