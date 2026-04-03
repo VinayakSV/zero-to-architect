@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback, memo } from 'react';
-import { Box, IconButton, Modal, Tooltip, Typography, Slider } from '@mui/material';
+import { Box, IconButton, Modal, Tooltip, Typography, Slider, useMediaQuery, useTheme } from '@mui/material';
 import {
   ZoomIn, ZoomOut, Fullscreen, Close, RestartAlt,
   FitScreen, Download,
@@ -23,7 +23,7 @@ const MIN_ZOOM = 0.25;
 const MAX_ZOOM = 4;
 const ZOOM_STEP = 0.25;
 
-const toolbarBtnSx = {
+const btnSx = {
   bgcolor: 'background.paper',
   border: '1px solid',
   borderColor: 'divider',
@@ -33,6 +33,8 @@ const toolbarBtnSx = {
 const MermaidDiagram = memo(function MermaidDiagram({ chart }) {
   const ref = useRef(null);
   const { mode } = useThemeMode();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [svg, setSvg] = useState('');
   const [open, setOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
@@ -57,28 +59,24 @@ const MermaidDiagram = memo(function MermaidDiagram({ chart }) {
   }, [chart, mode]);
 
   const handleOpen = useCallback(() => {
-    setZoom(1);
+    setZoom(isMobile ? 0.6 : 1);
     setPan({ x: 0, y: 0 });
     setOpen(true);
-  }, []);
+  }, [isMobile]);
 
   const handleClose = useCallback(() => setOpen(false), []);
-
-  const handleZoomIn = useCallback(() =>
-    setZoom((z) => Math.min(z + ZOOM_STEP, MAX_ZOOM)), []);
-
-  const handleZoomOut = useCallback(() =>
-    setZoom((z) => Math.max(z - ZOOM_STEP, MIN_ZOOM)), []);
+  const handleZoomIn = useCallback(() => setZoom((z) => Math.min(z + ZOOM_STEP, MAX_ZOOM)), []);
+  const handleZoomOut = useCallback(() => setZoom((z) => Math.max(z - ZOOM_STEP, MIN_ZOOM)), []);
 
   const handleReset = useCallback(() => {
-    setZoom(1);
+    setZoom(isMobile ? 0.6 : 1);
     setPan({ x: 0, y: 0 });
-  }, []);
+  }, [isMobile]);
 
   const handleFit = useCallback(() => {
-    setZoom(0.5);
+    setZoom(isMobile ? 0.35 : 0.5);
     setPan({ x: 0, y: 0 });
-  }, []);
+  }, [isMobile]);
 
   const handleWheel = useCallback((e) => {
     e.preventDefault();
@@ -99,9 +97,7 @@ const MermaidDiagram = memo(function MermaidDiagram({ chart }) {
     setPan({ x: d.startPanX + (e.clientX - d.startX), y: d.startPanY + (e.clientY - d.startY) });
   }, []);
 
-  const handlePointerUp = useCallback(() => {
-    dragRef.current.dragging = false;
-  }, []);
+  const handlePointerUp = useCallback(() => { dragRef.current.dragging = false; }, []);
 
   const handleDownload = useCallback(() => {
     if (!svg) return;
@@ -118,12 +114,12 @@ const MermaidDiagram = memo(function MermaidDiagram({ chart }) {
 
   return (
     <>
-      {/* Inline diagram with expand button */}
+      {/* Inline diagram */}
       <Box
         sx={{
           my: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2,
           border: '1px solid', borderColor: 'divider', overflow: 'auto',
-          position: 'relative', group: 'mermaid',
+          position: 'relative',
           '& svg': { maxWidth: '100%', height: 'auto' },
           '&:hover .expand-btn': { opacity: 1 },
         }}
@@ -135,8 +131,9 @@ const MermaidDiagram = memo(function MermaidDiagram({ chart }) {
             onClick={handleOpen}
             size="small"
             sx={{
-              position: 'absolute', top: 8, right: 8, opacity: 0,
-              transition: 'opacity 0.2s', ...toolbarBtnSx,
+              position: 'absolute', top: 8, right: 8,
+              opacity: { xs: 0.8, sm: 0 },
+              transition: 'opacity 0.2s', ...btnSx,
             }}
           >
             <Fullscreen fontSize="small" />
@@ -146,62 +143,36 @@ const MermaidDiagram = memo(function MermaidDiagram({ chart }) {
 
       {/* Fullscreen modal */}
       <Modal open={open} onClose={handleClose}>
-        <Box sx={{
-          position: 'fixed', inset: 0, bgcolor: 'background.default',
-          display: 'flex', flexDirection: 'column',
-        }}>
-          {/* Toolbar */}
+        <Box sx={{ position: 'fixed', inset: 0, bgcolor: 'background.default', display: 'flex', flexDirection: 'column' }}>
+
+          {/* Top bar — title + close (always visible) */}
           <Box sx={{
-            display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1,
+            display: 'flex', alignItems: 'center', px: 1.5, py: 0.75,
             borderBottom: '1px solid', borderColor: 'divider', bgcolor: 'background.paper',
-            flexShrink: 0,
+            flexShrink: 0, minHeight: 48,
           }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mr: 'auto' }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, flex: 1, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
               Diagram Viewer
             </Typography>
-
-            <Tooltip title="Zoom Out (−)"><IconButton size="small" onClick={handleZoomOut} sx={toolbarBtnSx}><ZoomOut fontSize="small" /></IconButton></Tooltip>
-
-            <Box sx={{ width: 120, mx: 1 }}>
-              <Slider
-                size="small"
-                value={zoom}
-                min={MIN_ZOOM}
-                max={MAX_ZOOM}
-                step={ZOOM_STEP}
-                onChange={(_, v) => setZoom(v)}
-                valueLabelDisplay="auto"
-                valueLabelFormat={(v) => `${Math.round(v * 100)}%`}
-              />
-            </Box>
-
-            <Tooltip title="Zoom In (+)"><IconButton size="small" onClick={handleZoomIn} sx={toolbarBtnSx}><ZoomIn fontSize="small" /></IconButton></Tooltip>
-
-            <Box sx={{ width: 1, height: 24, bgcolor: 'divider', mx: 0.5 }} />
-
-            <Tooltip title="Fit to screen"><IconButton size="small" onClick={handleFit} sx={toolbarBtnSx}><FitScreen fontSize="small" /></IconButton></Tooltip>
-            <Tooltip title="Reset"><IconButton size="small" onClick={handleReset} sx={toolbarBtnSx}><RestartAlt fontSize="small" /></IconButton></Tooltip>
-            <Tooltip title="Download SVG"><IconButton size="small" onClick={handleDownload} sx={toolbarBtnSx}><Download fontSize="small" /></IconButton></Tooltip>
-
-            <Box sx={{ width: 1, height: 24, bgcolor: 'divider', mx: 0.5 }} />
-
-            <Typography variant="caption" color="text.secondary" sx={{ minWidth: 45, textAlign: 'center' }}>
+            <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
               {Math.round(zoom * 100)}%
             </Typography>
-
-            <Tooltip title="Close (Esc)"><IconButton size="small" onClick={handleClose} sx={toolbarBtnSx}><Close fontSize="small" /></IconButton></Tooltip>
+            <IconButton onClick={handleClose} size="small" sx={{ ...btnSx, ml: 0.5 }}>
+              <Close fontSize="small" />
+            </IconButton>
           </Box>
 
-          {/* Diagram canvas — pannable & zoomable */}
+          {/* Diagram canvas */}
           <Box
             onWheel={handleWheel}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             sx={{
-              flex: 1, overflow: 'hidden', cursor: dragRef.current.dragging ? 'grabbing' : 'grab',
+              flex: 1, overflow: 'hidden',
+              cursor: dragRef.current.dragging ? 'grabbing' : 'grab',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              userSelect: 'none',
+              userSelect: 'none', touchAction: 'none',
             }}
           >
             <Box
@@ -215,13 +186,41 @@ const MermaidDiagram = memo(function MermaidDiagram({ chart }) {
             />
           </Box>
 
-          {/* Bottom hint */}
+          {/* Bottom toolbar — wraps nicely on mobile */}
           <Box sx={{
-            textAlign: 'center', py: 0.5, bgcolor: 'background.paper',
-            borderTop: '1px solid', borderColor: 'divider',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexWrap: 'wrap', gap: { xs: 0.5, sm: 1 }, px: 1.5, py: 1,
+            borderTop: '1px solid', borderColor: 'divider', bgcolor: 'background.paper',
+            flexShrink: 0,
           }}>
-            <Typography variant="caption" color="text.disabled">
-              Scroll to zoom • Drag to pan • Esc to close
+            <IconButton size="small" onClick={handleZoomOut} sx={btnSx}><ZoomOut fontSize="small" /></IconButton>
+
+            <Box sx={{ width: { xs: 80, sm: 120 } }}>
+              <Slider
+                size="small"
+                value={zoom}
+                min={MIN_ZOOM}
+                max={MAX_ZOOM}
+                step={ZOOM_STEP}
+                onChange={(_, v) => setZoom(v)}
+                valueLabelDisplay="auto"
+                valueLabelFormat={(v) => `${Math.round(v * 100)}%`}
+              />
+            </Box>
+
+            <IconButton size="small" onClick={handleZoomIn} sx={btnSx}><ZoomIn fontSize="small" /></IconButton>
+
+            <Box sx={{ width: 1, height: 20, bgcolor: 'divider', display: { xs: 'none', sm: 'block' } }} />
+
+            <IconButton size="small" onClick={handleFit} sx={btnSx}><FitScreen fontSize="small" /></IconButton>
+            <IconButton size="small" onClick={handleReset} sx={btnSx}><RestartAlt fontSize="small" /></IconButton>
+            <IconButton size="small" onClick={handleDownload} sx={btnSx}><Download fontSize="small" /></IconButton>
+          </Box>
+
+          {/* Hint */}
+          <Box sx={{ textAlign: 'center', pb: 0.75, bgcolor: 'background.paper' }}>
+            <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.65rem' }}>
+              {isMobile ? 'Pinch to zoom • Drag to pan' : 'Scroll to zoom • Drag to pan • Esc to close'}
             </Typography>
           </Box>
         </Box>
