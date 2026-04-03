@@ -6,6 +6,8 @@ import {
   Gavel, Waves, Language, Balance, LocalTaxi, Atm, TravelExplore,
   TrafficOutlined, SportsEsports, OndemandVideo, Search, CloudSync,
   Timer, Recommend, LocalParking, DynamicFeed, Forum, Link, Chat,
+  Elevator, Casino, ConfirmationNumber, Receipt, LocalLibrary,
+  PointOfSale, Extension,
 } from '@mui/icons-material';
 
 const tutorialRegistry = [
@@ -229,6 +231,71 @@ const tutorialRegistry = [
     subcategory: 'Classic Designs',
     icon: Chat,
     tags: ['HLD', 'WebSocket', 'Encryption', 'Presence', 'Group Chat'],
+  },
+
+  // ── Low-Level Design (LLD) ──
+  {
+    id: 'lld-elevator',
+    title: 'Design Elevator System',
+    description: 'OOP design — scheduling algorithms, state machine, multi-elevator coordination, SOLID principles',
+    category: 'Low-Level Design',
+    subcategory: 'Classic LLD',
+    icon: Elevator,
+    tags: ['LLD', 'OOP', 'State Machine', 'Strategy Pattern', 'SOLID'],
+  },
+  {
+    id: 'lld-snake-ladder',
+    title: 'Design Snake & Ladder Game',
+    description: 'OOP design — board, dice, players, game engine, turn management, win detection',
+    category: 'Low-Level Design',
+    subcategory: 'Classic LLD',
+    icon: Casino,
+    tags: ['LLD', 'OOP', 'Game Design', 'State Machine'],
+  },
+  {
+    id: 'lld-bookmyshow',
+    title: 'Design BookMyShow / Movie Tickets',
+    description: 'OOP design — seat selection, concurrent booking, payment, show management',
+    category: 'Low-Level Design',
+    subcategory: 'Classic LLD',
+    icon: ConfirmationNumber,
+    tags: ['LLD', 'OOP', 'Concurrency', 'Booking System'],
+  },
+  {
+    id: 'lld-splitwise',
+    title: 'Design Splitwise / Expense Sharing',
+    description: 'OOP design — expense splitting (equal, exact, percentage), debt simplification, group management',
+    category: 'Low-Level Design',
+    subcategory: 'Classic LLD',
+    icon: Receipt,
+    tags: ['LLD', 'OOP', 'Strategy Pattern', 'Graph Algorithm'],
+  },
+  {
+    id: 'lld-library',
+    title: 'Design Library Management System',
+    description: 'OOP design — books, members, borrowing, fines, search, reservation, notifications',
+    category: 'Low-Level Design',
+    subcategory: 'Classic LLD',
+    icon: LocalLibrary,
+    tags: ['LLD', 'OOP', 'CRUD', 'Observer Pattern'],
+  },
+  {
+    id: 'lld-vending-machine',
+    title: 'Design Vending Machine',
+    description: 'OOP design — state pattern, coin handling, product dispensing, inventory, refund',
+    category: 'Low-Level Design',
+    subcategory: 'Classic LLD',
+    icon: PointOfSale,
+    tags: ['LLD', 'OOP', 'State Pattern', 'Chain of Responsibility'],
+  },
+  {
+    id: 'lld-chess',
+    title: 'Design Chess Game',
+    description: 'OOP design — pieces, board, move validation, check/checkmate detection, game history',
+    category: 'Low-Level Design',
+    subcategory: 'Classic LLD',
+    icon: Extension,
+    tags: ['LLD', 'OOP', 'Polymorphism', 'Command Pattern'],
   },
 
   // ── Real-World Builds ──
@@ -463,6 +530,7 @@ export const getTutorialById = (id) => tutorialRegistry.find((t) => t.id === id)
 export const getCategoryIcon = (category) => {
   const map = {
     'System Design': Architecture,
+    'Low-Level Design': Extension,
     'Real-World Builds': CloudUpload,
     'Architecture Decisions': CompareArrows,
     'Microservices': Hub,
