@@ -432,6 +432,7 @@ export const trafficControlSim = {
 
 // Master lookup: tutorial ID → simulation config
 export const simulationMap = {
+  // System Design
   'rate-limiter': rateLimiterSim,
   'design-rate-limiter-distributed': rateLimiterSim,
   'cdn-deep-dive': cdnSim,
@@ -449,8 +450,494 @@ export const simulationMap = {
   'design-recommendation': recommendationSim,
   'design-parking-lot': parkingLotSim,
   'design-traffic-control': trafficControlSim,
-  'notification-system': newsfeedSim,
-  'cache-system': cdnSim,
   'design-forum': newsfeedSim,
   'design-tic-tac-toe': parkingLotSim,
+  'payment-gateway': paymentGatewaySim,
+  'stock-trading-platform': stockTradingSim,
+  'fraud-detection-system': fraudDetectionSim,
+  'notification-system': newsfeedSim,
+  'cache-system': cdnSim,
+  // Real-World Builds
+  'data-ingestion-platform': dataIngestionSim,
+  'live-streaming-platform': liveStreamingSim,
+  // Architecture Decisions
+  'database-decisions': databaseDecisionsSim,
+  'caching-strategy': cachingStrategySim,
+  'messaging-decisions': messagingDecisionsSim,
+  'auth-security-decisions': authSecuritySim,
+  'cloud-infra-decisions': cloudInfraDecisionsSim,
+  'ai-in-system-design': aiInSystemDesignSim,
+  // Microservices
+  'microservices-patterns': microservicesPatternsSim,
+  'service-communication': serviceCommunicationSim,
+  'api-gateway-pattern': apiGatewayPatternSim,
+  'distributed-transactions': distributedTransactionsSim,
+  'kafka-deep-dive': kafkaDeepDiveSim,
+  'service-discovery': serviceDiscoverySim,
+  // Java
+  'hashmap-internals': hashmapSim,
+  'concurrent-hashmap': concurrentHashmapSim,
+  'multithreading': multithreadingSim,
+  'completable-future': completableFutureSim,
+  'java8-features': java8Sim,
+  'java17-features': java17Sim,
+  'java-memory-model': javaMemoryModelSim,
+  'java-coding-standards': codingStandardsSim,
+  'reactive-programming': reactiveSim,
 };
+
+
+export const paymentGatewaySim = {
+  title: 'Payment Gateway — Transaction Flow',
+  description: 'Watch how a payment is processed with idempotency',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'user', x: 70, y: 140, label: 'Customer', icon: '👤' },
+    { id: 'merchant', x: 220, y: 140, label: 'Merchant', icon: '🏪' },
+    { id: 'gateway', x: 370, y: 140, label: 'Payment GW', icon: '💳' },
+    { id: 'bank', x: 520, y: 80, label: 'Bank', icon: '🏦' },
+    { id: 'ledger', x: 520, y: 210, label: 'Ledger', icon: '📒' },
+  ],
+  connections: [
+    { id: 'u-m', from: 'user', to: 'merchant' },
+    { id: 'm-g', from: 'merchant', to: 'gateway' },
+    { id: 'g-b', from: 'gateway', to: 'bank' },
+    { id: 'g-l', from: 'gateway', to: 'ledger' },
+  ],
+  steps: [
+    { description: '👤 Customer clicks "Pay ₹999" on checkout page', duration: 1300, nodeStates: { user: 'active' } },
+    { description: '🏪 Merchant sends payment request with idempotency key', duration: 1400, packet: { from: 'user', to: 'merchant', label: 'Pay ₹999', color: '#2196f3' }, nodeStates: { user: 'active', merchant: 'active' }, activeConnections: ['u-m'] },
+    { description: '💳 Gateway creates transaction (PENDING), checks for duplicates', duration: 1400, packet: { from: 'merchant', to: 'gateway', label: 'Charge', color: '#ff9800' }, nodeStates: { merchant: 'active', gateway: 'active' }, activeConnections: ['m-g'] },
+    { description: '🏦 Bank authorizes: sufficient balance, card not blocked', duration: 1500, packet: { from: 'gateway', to: 'bank', label: 'Authorize', color: '#2196f3' }, nodeStates: { gateway: 'active', bank: 'active' }, activeConnections: ['g-b'] },
+    { description: '✅ Bank approves! Funds held. Transaction → AUTHORIZED', duration: 1300, nodeStates: { bank: 'highlight', gateway: 'active' } },
+    { description: '📒 Record in ledger: debit customer, credit merchant', duration: 1400, packet: { from: 'gateway', to: 'ledger', label: 'Record', color: '#4caf50' }, nodeStates: { gateway: 'active', ledger: 'active' }, activeConnections: ['g-l'] },
+    { description: '✅ Payment complete! Customer sees "Payment Successful"', duration: 1500, packet: { from: 'gateway', to: 'user', label: 'Success ✅', color: '#4caf50' }, nodeStates: { user: 'highlight', gateway: 'highlight', ledger: 'highlight' }, activeConnections: ['m-g', 'u-m'] },
+  ],
+};
+
+export const stockTradingSim = {
+  title: 'Stock Trading — Order Matching Engine',
+  description: 'Watch how buy and sell orders get matched',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'buyer', x: 70, y: 100, label: 'Buyer', icon: '📈' },
+    { id: 'seller', x: 70, y: 210, label: 'Seller', icon: '📉' },
+    { id: 'engine', x: 300, y: 140, label: 'Match Engine', icon: '⚡' },
+    { id: 'book', x: 500, y: 80, label: 'Order Book', icon: '📖' },
+    { id: 'settle', x: 500, y: 210, label: 'Settlement', icon: '🤝' },
+  ],
+  connections: [
+    { id: 'b-e', from: 'buyer', to: 'engine' },
+    { id: 's-e', from: 'seller', to: 'engine' },
+    { id: 'e-ob', from: 'engine', to: 'book' },
+    { id: 'e-st', from: 'engine', to: 'settle' },
+  ],
+  steps: [
+    { description: '📈 Buyer places order: BUY 100 shares of INFY at ₹1500', duration: 1400, packet: { from: 'buyer', to: 'engine', label: 'BUY 100@1500', color: '#4caf50' }, nodeStates: { buyer: 'active' }, activeConnections: ['b-e'] },
+    { description: '📖 No matching sell order yet → Added to Order Book', duration: 1300, packet: { from: 'engine', to: 'book', label: 'Queue', color: '#ff9800' }, nodeStates: { engine: 'active', book: 'active' }, activeConnections: ['e-ob'] },
+    { description: '📉 Seller places order: SELL 100 shares of INFY at ₹1500', duration: 1400, packet: { from: 'seller', to: 'engine', label: 'SELL 100@1500', color: '#f44336' }, nodeStates: { seller: 'active' }, activeConnections: ['s-e'] },
+    { description: '⚡ MATCH FOUND! Buy ₹1500 meets Sell ₹1500 → Execute trade', duration: 1600, nodeStates: { engine: 'highlight' } },
+    { description: '🤝 Settlement: Transfer shares to buyer, money to seller', duration: 1500, packet: { from: 'engine', to: 'settle', label: 'Trade executed', color: '#4caf50' }, nodeStates: { engine: 'active', settle: 'active' }, activeConnections: ['e-st'] },
+    { description: '✅ Trade complete! Both parties notified in < 10ms', duration: 1500, nodeStates: { buyer: 'highlight', seller: 'highlight', settle: 'highlight' } },
+  ],
+};
+
+export const fraudDetectionSim = {
+  title: 'Fraud Detection — Real-Time Pipeline',
+  description: 'Watch how a transaction is checked for fraud in real-time',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'txn', x: 70, y: 140, label: 'Transaction', icon: '💳' },
+    { id: 'stream', x: 220, y: 140, label: 'Stream Proc', icon: '⚡' },
+    { id: 'rules', x: 380, y: 70, label: 'Rule Engine', icon: '📋' },
+    { id: 'ml', x: 380, y: 210, label: 'ML Model', icon: '🤖' },
+    { id: 'decision', x: 530, y: 140, label: 'Decision', icon: '✅' },
+  ],
+  connections: [
+    { id: 't-s', from: 'txn', to: 'stream' },
+    { id: 's-r', from: 'stream', to: 'rules' },
+    { id: 's-m', from: 'stream', to: 'ml' },
+    { id: 'r-d', from: 'rules', to: 'decision' },
+    { id: 'm-d', from: 'ml', to: 'decision' },
+  ],
+  steps: [
+    { description: '💳 Transaction: ₹50,000 purchase from new device in new city', duration: 1400, nodeStates: { txn: 'active' } },
+    { description: '⚡ Kafka streams the transaction for real-time analysis', duration: 1300, packet: { from: 'txn', to: 'stream', label: 'Analyze', color: '#2196f3' }, nodeStates: { txn: 'active', stream: 'active' }, activeConnections: ['t-s'] },
+    { description: '📋 Rule Engine: Amount > ₹10K + new device + new city = HIGH RISK', duration: 1500, packet: { from: 'stream', to: 'rules', label: 'Check rules', color: '#ff9800' }, nodeStates: { stream: 'active', rules: 'warn' }, activeConnections: ['s-r'] },
+    { description: '🤖 ML Model: Spending pattern anomaly score = 0.87 (high)', duration: 1500, packet: { from: 'stream', to: 'ml', label: 'Score', color: '#9c27b0' }, nodeStates: { stream: 'active', ml: 'warn' }, activeConnections: ['s-m'] },
+    { description: '🚨 Both signals HIGH → Block transaction + send OTP verification', duration: 1600, nodeStates: { rules: 'error', ml: 'error', decision: 'error' } },
+    { description: '📱 User receives OTP, verifies → Transaction approved after 2FA', duration: 1500, nodeStates: { decision: 'highlight', txn: 'highlight' } },
+  ],
+};
+
+export const dataIngestionSim = {
+  title: 'Data Ingestion — Multi-Tenant CSV Pipeline',
+  description: 'Watch how files are processed in parallel',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'upload', x: 70, y: 140, label: 'File Upload', icon: '📤' },
+    { id: 's3', x: 220, y: 80, label: 'S3 Bucket', icon: '☁️' },
+    { id: 'kafka', x: 220, y: 210, label: 'Kafka', icon: '📬' },
+    { id: 'worker', x: 400, y: 140, label: 'Worker Pool', icon: '⚙️' },
+    { id: 'db', x: 540, y: 140, label: 'Database', icon: '💾' },
+  ],
+  connections: [
+    { id: 'u-s3', from: 'upload', to: 's3' },
+    { id: 'u-k', from: 'upload', to: 'kafka' },
+    { id: 'k-w', from: 'kafka', to: 'worker' },
+    { id: 'w-db', from: 'worker', to: 'db' },
+  ],
+  steps: [
+    { description: '📤 Tenant uploads 500MB CSV file (2M rows)', duration: 1400, nodeStates: { upload: 'active' } },
+    { description: '☁️ File stored in S3, metadata event published', duration: 1300, packet: { from: 'upload', to: 's3', label: '500MB CSV', color: '#2196f3' }, nodeStates: { upload: 'active', s3: 'active' }, activeConnections: ['u-s3'] },
+    { description: '📬 Kafka event triggers processing pipeline', duration: 1300, packet: { from: 'upload', to: 'kafka', label: 'Process!', color: '#ff9800' }, nodeStates: { kafka: 'active' }, activeConnections: ['u-k'] },
+    { description: '⚙️ Worker pool splits into 10 parallel chunks (200K rows each)', duration: 1500, packet: { from: 'kafka', to: 'worker', label: '10 chunks', color: '#9c27b0' }, nodeStates: { kafka: 'active', worker: 'active' }, activeConnections: ['k-w'] },
+    { description: '💾 Each worker validates, transforms, and batch-inserts to DB', duration: 1500, packet: { from: 'worker', to: 'db', label: 'Batch insert', color: '#4caf50' }, nodeStates: { worker: 'active', db: 'active' }, activeConnections: ['w-db'] },
+    { description: '✅ 2M rows processed in 45 seconds! Tenant notified.', duration: 1500, nodeStates: { upload: 'highlight', db: 'highlight', worker: 'highlight' } },
+  ],
+};
+
+export const liveStreamingSim = {
+  title: 'Live Streaming — Ingest to Viewer',
+  description: 'Watch how a live stream reaches millions of viewers',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'camera', x: 70, y: 140, label: 'Camera', icon: '📹' },
+    { id: 'ingest', x: 220, y: 140, label: 'Ingest Server', icon: '📡' },
+    { id: 'transcode', x: 370, y: 80, label: 'Transcoder', icon: '🔄' },
+    { id: 'cdn', x: 370, y: 210, label: 'CDN Edge', icon: '🌐' },
+    { id: 'viewer', x: 530, y: 140, label: 'Viewers (1M)', icon: '👥' },
+  ],
+  connections: [
+    { id: 'c-i', from: 'camera', to: 'ingest' },
+    { id: 'i-t', from: 'ingest', to: 'transcode' },
+    { id: 't-cdn', from: 'transcode', to: 'cdn' },
+    { id: 'cdn-v', from: 'cdn', to: 'viewer' },
+  ],
+  steps: [
+    { description: '📹 Camera captures live video at 4K 60fps', duration: 1300, nodeStates: { camera: 'active' } },
+    { description: '📡 RTMP stream sent to ingest server', duration: 1300, packet: { from: 'camera', to: 'ingest', label: 'RTMP 4K', color: '#2196f3' }, nodeStates: { camera: 'active', ingest: 'active' }, activeConnections: ['c-i'] },
+    { description: '🔄 Real-time transcode into 1080p, 720p, 480p, 360p', duration: 1500, packet: { from: 'ingest', to: 'transcode', label: 'Transcode', color: '#ff9800' }, nodeStates: { ingest: 'active', transcode: 'active' }, activeConnections: ['i-t'] },
+    { description: '🌐 2-second HLS chunks pushed to CDN edges worldwide', duration: 1400, packet: { from: 'transcode', to: 'cdn', label: 'HLS chunks', color: '#9c27b0' }, nodeStates: { transcode: 'active', cdn: 'active' }, activeConnections: ['t-cdn'] },
+    { description: '👥 1 million viewers pull chunks from nearest CDN edge', duration: 1500, packet: { from: 'cdn', to: 'viewer', label: 'Stream', color: '#4caf50' }, nodeStates: { cdn: 'highlight', viewer: 'active' }, activeConnections: ['cdn-v'] },
+    { description: '✅ Live with ~5 second delay. Each viewer gets adaptive quality!', duration: 1500, nodeStates: { camera: 'highlight', viewer: 'highlight', cdn: 'highlight' } },
+  ],
+};
+
+
+export const databaseDecisionsSim = {
+  title: 'Database Decisions — SQL vs NoSQL Query Path',
+  description: 'See how SQL and NoSQL handle the same query differently',
+  width: 580, height: 260,
+  nodes: [
+    { id: 'app', x: 70, y: 130, label: 'Application', icon: '📱' },
+    { id: 'sql', x: 300, y: 60, label: 'PostgreSQL', icon: '🐘' },
+    { id: 'nosql', x: 300, y: 200, label: 'DynamoDB', icon: '⚡' },
+    { id: 'result', x: 500, y: 130, label: 'Result', icon: '📊' },
+  ],
+  connections: [
+    { id: 'a-sq', from: 'app', to: 'sql' },
+    { id: 'a-ns', from: 'app', to: 'nosql' },
+    { id: 'sq-r', from: 'sql', to: 'result' },
+    { id: 'ns-r', from: 'nosql', to: 'result' },
+  ],
+  steps: [
+    { description: '📱 App needs: "Get all orders for user X with total > ₹1000"', duration: 1500, nodeStates: { app: 'active' } },
+    { description: '🐘 SQL: SELECT * FROM orders WHERE user_id=X AND total>1000 (JOIN + INDEX)', duration: 1500, packet: { from: 'app', to: 'sql', label: 'Complex query', color: '#2196f3' }, nodeStates: { app: 'active', sql: 'active' }, activeConnections: ['a-sq'] },
+    { description: '🐘 SQL scans index, joins tables → 50ms (flexible but slower at scale)', duration: 1400, packet: { from: 'sql', to: 'result', label: '50ms', color: '#ff9800' }, nodeStates: { sql: 'active', result: 'active' }, activeConnections: ['sq-r'] },
+    { description: '⚡ NoSQL: Query by partition key (user_id) → filter in app', duration: 1500, packet: { from: 'app', to: 'nosql', label: 'Key lookup', color: '#4caf50' }, nodeStates: { app: 'active', nosql: 'active' }, activeConnections: ['a-ns'] },
+    { description: '⚡ NoSQL returns in 5ms! But filtering total>1000 happens in app code', duration: 1400, packet: { from: 'nosql', to: 'result', label: '5ms', color: '#4caf50' }, nodeStates: { nosql: 'highlight', result: 'highlight' }, activeConnections: ['ns-r'] },
+    { description: '💡 Trade-off: SQL = flexible queries, NoSQL = fast key lookups at scale', duration: 1800, nodeStates: { sql: 'highlight', nosql: 'highlight' } },
+  ],
+};
+
+export const cachingStrategySim = cdnSim; // reuse CDN sim — same cache hit/miss concept
+
+export const messagingDecisionsSim = {
+  title: 'Messaging — Kafka vs RabbitMQ',
+  description: 'See how different message brokers handle messages',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'producer', x: 70, y: 140, label: 'Producer', icon: '📤' },
+    { id: 'kafka', x: 300, y: 70, label: 'Kafka', icon: '📬' },
+    { id: 'rabbit', x: 300, y: 210, label: 'RabbitMQ', icon: '🐰' },
+    { id: 'c1', x: 520, y: 70, label: 'Consumer 1', icon: '📥' },
+    { id: 'c2', x: 520, y: 210, label: 'Consumer 2', icon: '📥' },
+  ],
+  connections: [
+    { id: 'p-k', from: 'producer', to: 'kafka' },
+    { id: 'p-r', from: 'producer', to: 'rabbit' },
+    { id: 'k-c1', from: 'kafka', to: 'c1' },
+    { id: 'r-c2', from: 'rabbit', to: 'c2' },
+  ],
+  steps: [
+    { description: '📤 Producer sends "Order Created" event', duration: 1300, nodeStates: { producer: 'active' } },
+    { description: '📬 Kafka: Appends to partition log (retained for 7 days)', duration: 1400, packet: { from: 'producer', to: 'kafka', label: 'Append', color: '#2196f3' }, nodeStates: { producer: 'active', kafka: 'active' }, activeConnections: ['p-k'] },
+    { description: '📥 Consumer 1 pulls from Kafka at its own pace (consumer controls)', duration: 1400, packet: { from: 'kafka', to: 'c1', label: 'Pull', color: '#4caf50' }, nodeStates: { kafka: 'active', c1: 'active' }, activeConnections: ['k-c1'] },
+    { description: '🐰 RabbitMQ: Pushes message to queue (deleted after consumed)', duration: 1400, packet: { from: 'producer', to: 'rabbit', label: 'Push', color: '#ff9800' }, nodeStates: { producer: 'active', rabbit: 'active' }, activeConnections: ['p-r'] },
+    { description: '📥 Consumer 2 receives push from RabbitMQ (broker controls)', duration: 1400, packet: { from: 'rabbit', to: 'c2', label: 'Push', color: '#ff9800' }, nodeStates: { rabbit: 'active', c2: 'active' }, activeConnections: ['r-c2'] },
+    { description: '💡 Kafka: replay-able log, high throughput | RabbitMQ: smart routing, ACK-based', duration: 1800, nodeStates: { kafka: 'highlight', rabbit: 'highlight' } },
+  ],
+};
+
+export const authSecuritySim = {
+  title: 'OAuth2 — Authorization Code Flow',
+  description: 'Watch how OAuth2 login works step by step',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'user', x: 70, y: 140, label: 'User', icon: '👤' },
+    { id: 'app', x: 230, y: 140, label: 'Your App', icon: '📱' },
+    { id: 'auth', x: 420, y: 80, label: 'Auth Server', icon: '🔐' },
+    { id: 'api', x: 420, y: 210, label: 'Resource API', icon: '📡' },
+  ],
+  connections: [
+    { id: 'u-a', from: 'user', to: 'app' },
+    { id: 'a-au', from: 'app', to: 'auth' },
+    { id: 'a-api', from: 'app', to: 'api' },
+  ],
+  steps: [
+    { description: '👤 User clicks "Login with Google"', duration: 1300, packet: { from: 'user', to: 'app', label: 'Login', color: '#2196f3' }, nodeStates: { user: 'active' }, activeConnections: ['u-a'] },
+    { description: '📱 App redirects to Google Auth (with client_id + redirect_uri)', duration: 1400, packet: { from: 'app', to: 'auth', label: 'Authorize?', color: '#ff9800' }, nodeStates: { app: 'active', auth: 'active' }, activeConnections: ['a-au'] },
+    { description: '🔐 User logs in to Google, grants permission', duration: 1500, nodeStates: { auth: 'highlight', user: 'active' } },
+    { description: '🔐 Auth server returns authorization code to app', duration: 1400, packet: { from: 'auth', to: 'app', label: 'Auth code', color: '#9c27b0' }, nodeStates: { auth: 'active', app: 'active' }, activeConnections: ['a-au'] },
+    { description: '📱 App exchanges code for access token (server-to-server)', duration: 1400, packet: { from: 'app', to: 'auth', label: 'Code→Token', color: '#2196f3' }, nodeStates: { app: 'active', auth: 'active' }, activeConnections: ['a-au'] },
+    { description: '📡 App uses token to call Google API for user profile', duration: 1400, packet: { from: 'app', to: 'api', label: 'Bearer token', color: '#4caf50' }, nodeStates: { app: 'active', api: 'active' }, activeConnections: ['a-api'] },
+    { description: '✅ User logged in! Session created. Welcome, user!', duration: 1500, nodeStates: { user: 'highlight', app: 'highlight' } },
+  ],
+};
+
+export const microservicesPatternsSim = {
+  title: 'Microservices — Circuit Breaker Pattern',
+  description: 'Watch how a circuit breaker protects against cascading failures',
+  width: 600, height: 260,
+  nodes: [
+    { id: 'svcA', x: 80, y: 130, label: 'Order Service', icon: '📦' },
+    { id: 'cb', x: 270, y: 130, label: 'Circuit Breaker', icon: '⚡' },
+    { id: 'svcB', x: 460, y: 70, label: 'Payment Svc', icon: '💳' },
+    { id: 'fallback', x: 460, y: 200, label: 'Fallback', icon: '🔄' },
+  ],
+  connections: [
+    { id: 'a-cb', from: 'svcA', to: 'cb' },
+    { id: 'cb-b', from: 'cb', to: 'svcB' },
+    { id: 'cb-f', from: 'cb', to: 'fallback' },
+  ],
+  steps: [
+    { description: '📦 Order Service calls Payment Service (circuit: CLOSED ✅)', duration: 1400, packet: { from: 'svcA', to: 'cb', label: 'Pay', color: '#4caf50' }, nodeStates: { svcA: 'active', cb: 'active' }, activeConnections: ['a-cb'] },
+    { description: '💳 Payment Service responds OK — circuit stays CLOSED', duration: 1300, packet: { from: 'cb', to: 'svcB', label: 'OK', color: '#4caf50' }, nodeStates: { cb: 'active', svcB: 'active' }, activeConnections: ['cb-b'] },
+    { description: '💳 Payment Service starts failing... 3 failures in a row', duration: 1500, packet: { from: 'cb', to: 'svcB', label: 'Timeout!', color: '#f44336' }, nodeStates: { cb: 'warn', svcB: 'error' }, activeConnections: ['cb-b'] },
+    { description: '⚡ Circuit OPENS! Stops calling Payment Service to prevent cascade', duration: 1600, nodeStates: { cb: 'error', svcB: 'error' } },
+    { description: '🔄 All requests go to fallback: "Payment queued, retry later"', duration: 1500, packet: { from: 'cb', to: 'fallback', label: 'Fallback', color: '#ff9800' }, nodeStates: { cb: 'error', fallback: 'active' }, activeConnections: ['cb-f'] },
+    { description: '⏳ After 30s, circuit goes HALF-OPEN — tries one request', duration: 1500, packet: { from: 'cb', to: 'svcB', label: 'Test', color: '#2196f3' }, nodeStates: { cb: 'warn', svcB: 'active' }, activeConnections: ['cb-b'] },
+    { description: '✅ Payment Service recovered! Circuit CLOSES. Normal flow resumes.', duration: 1500, nodeStates: { cb: 'highlight', svcB: 'highlight', svcA: 'highlight' } },
+  ],
+};
+
+export const serviceCommunicationSim = {
+  title: 'Service Communication — REST vs gRPC vs Kafka',
+  description: 'Compare sync vs async communication patterns',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'svcA', x: 80, y: 140, label: 'Service A', icon: '📦' },
+    { id: 'rest', x: 300, y: 50, label: 'REST (sync)', icon: '🔗' },
+    { id: 'grpc', x: 300, y: 140, label: 'gRPC (sync)', icon: '⚡' },
+    { id: 'kafka', x: 300, y: 230, label: 'Kafka (async)', icon: '📬' },
+    { id: 'svcB', x: 520, y: 140, label: 'Service B', icon: '📦' },
+  ],
+  connections: [
+    { id: 'a-rest', from: 'svcA', to: 'rest' },
+    { id: 'a-grpc', from: 'svcA', to: 'grpc' },
+    { id: 'a-kafka', from: 'svcA', to: 'kafka' },
+    { id: 'rest-b', from: 'rest', to: 'svcB' },
+    { id: 'grpc-b', from: 'grpc', to: 'svcB' },
+    { id: 'kafka-b', from: 'kafka', to: 'svcB' },
+  ],
+  steps: [
+    { description: '🔗 REST: JSON over HTTP — human readable, ~50ms latency', duration: 1500, packet: { from: 'svcA', to: 'rest', label: 'JSON', color: '#2196f3' }, nodeStates: { svcA: 'active', rest: 'active' }, activeConnections: ['a-rest'] },
+    { description: '🔗 REST: Service B receives, processes, returns JSON response', duration: 1300, packet: { from: 'rest', to: 'svcB', label: '50ms', color: '#2196f3' }, nodeStates: { rest: 'active', svcB: 'active' }, activeConnections: ['rest-b'] },
+    { description: '⚡ gRPC: Binary protobuf — 10x smaller, ~5ms latency', duration: 1500, packet: { from: 'svcA', to: 'grpc', label: 'Protobuf', color: '#4caf50' }, nodeStates: { svcA: 'active', grpc: 'active' }, activeConnections: ['a-grpc'] },
+    { description: '⚡ gRPC: Streaming support, type-safe, blazing fast', duration: 1300, packet: { from: 'grpc', to: 'svcB', label: '5ms', color: '#4caf50' }, nodeStates: { grpc: 'highlight', svcB: 'active' }, activeConnections: ['grpc-b'] },
+    { description: '📬 Kafka: Fire-and-forget — Service A doesn\'t wait for B', duration: 1500, packet: { from: 'svcA', to: 'kafka', label: 'Event', color: '#ff9800' }, nodeStates: { svcA: 'active', kafka: 'active' }, activeConnections: ['a-kafka'] },
+    { description: '📬 Kafka: Service B consumes when ready — fully decoupled', duration: 1400, packet: { from: 'kafka', to: 'svcB', label: 'Async', color: '#ff9800' }, nodeStates: { kafka: 'active', svcB: 'active' }, activeConnections: ['kafka-b'] },
+    { description: '💡 REST: simple APIs | gRPC: internal high-perf | Kafka: event-driven', duration: 1800, nodeStates: { rest: 'highlight', grpc: 'highlight', kafka: 'highlight' } },
+  ],
+};
+
+export const distributedTransactionsSim = {
+  title: 'Distributed Transactions — Saga Pattern',
+  description: 'Watch how a saga coordinates across services',
+  width: 600, height: 260,
+  nodes: [
+    { id: 'orch', x: 80, y: 130, label: 'Orchestrator', icon: '🎯' },
+    { id: 'order', x: 260, y: 60, label: 'Order Svc', icon: '📦' },
+    { id: 'payment', x: 420, y: 60, label: 'Payment Svc', icon: '💳' },
+    { id: 'inventory', x: 260, y: 210, label: 'Inventory Svc', icon: '📦' },
+    { id: 'shipping', x: 420, y: 210, label: 'Shipping Svc', icon: '🚚' },
+  ],
+  connections: [
+    { id: 'o-or', from: 'orch', to: 'order' },
+    { id: 'o-p', from: 'orch', to: 'payment' },
+    { id: 'o-i', from: 'orch', to: 'inventory' },
+    { id: 'o-s', from: 'orch', to: 'shipping' },
+  ],
+  steps: [
+    { description: '🎯 Saga starts: "Place Order" — Step 1: Create Order', duration: 1400, packet: { from: 'orch', to: 'order', label: 'Create', color: '#2196f3' }, nodeStates: { orch: 'active' }, activeConnections: ['o-or'] },
+    { description: '📦 Order created ✅ — Step 2: Process Payment', duration: 1300, packet: { from: 'orch', to: 'payment', label: 'Charge', color: '#ff9800' }, nodeStates: { orch: 'active', order: 'active', payment: 'active' }, activeConnections: ['o-p'] },
+    { description: '💳 Payment successful ✅ — Step 3: Reserve Inventory', duration: 1300, packet: { from: 'orch', to: 'inventory', label: 'Reserve', color: '#9c27b0' }, nodeStates: { orch: 'active', payment: 'active', inventory: 'active' }, activeConnections: ['o-i'] },
+    { description: '❌ Inventory FAILED! Item out of stock.', duration: 1600, nodeStates: { inventory: 'error', orch: 'error' } },
+    { description: '🔄 Compensating: Refund payment...', duration: 1400, packet: { from: 'orch', to: 'payment', label: 'Refund', color: '#f44336' }, nodeStates: { orch: 'warn', payment: 'warn' }, activeConnections: ['o-p'] },
+    { description: '🔄 Compensating: Cancel order...', duration: 1300, packet: { from: 'orch', to: 'order', label: 'Cancel', color: '#f44336' }, nodeStates: { orch: 'warn', order: 'warn' }, activeConnections: ['o-or'] },
+    { description: '✅ Saga completed with rollback. User notified: "Item out of stock"', duration: 1500, nodeStates: { orch: 'highlight', order: 'highlight', payment: 'highlight' } },
+  ],
+};
+
+export const kafkaDeepDiveSim = messagingDecisionsSim; // reuse messaging sim
+export const apiGatewayPatternSim = loadBalancerSim; // similar routing concept
+export const serviceDiscoverySim = loadBalancerSim; // similar discovery concept
+export const cloudInfraDecisionsSim = databaseDecisionsSim; // similar decision pattern
+export const aiInSystemDesignSim = recommendationSim; // similar ML pipeline
+
+
+export const hashmapSim = {
+  title: 'HashMap — put() Operation Internals',
+  description: 'Watch what happens inside HashMap when you put a key-value pair',
+  width: 580, height: 280,
+  nodes: [
+    { id: 'call', x: 70, y: 140, label: 'map.put()', icon: '📝' },
+    { id: 'hash', x: 220, y: 80, label: 'Hash Function', icon: '#️⃣' },
+    { id: 'bucket', x: 380, y: 80, label: 'Bucket[5]', icon: '🪣' },
+    { id: 'node', x: 380, y: 200, label: 'Node/Tree', icon: '🌳' },
+    { id: 'result', x: 530, y: 140, label: 'Stored!', icon: '✅' },
+  ],
+  connections: [
+    { id: 'c-h', from: 'call', to: 'hash' },
+    { id: 'h-b', from: 'hash', to: 'bucket' },
+    { id: 'b-n', from: 'bucket', to: 'node' },
+    { id: 'n-r', from: 'node', to: 'result' },
+  ],
+  steps: [
+    { description: '📝 map.put("name", "Alice") — what happens inside?', duration: 1500, nodeStates: { call: 'active' } },
+    { description: '#️⃣ Hash "name".hashCode() → 3373738 → spread → bucket index 5', duration: 1500, packet: { from: 'call', to: 'hash', label: 'hashCode()', color: '#2196f3' }, nodeStates: { call: 'active', hash: 'active' }, activeConnections: ['c-h'] },
+    { description: '🪣 Go to Bucket[5] — check if key already exists', duration: 1400, packet: { from: 'hash', to: 'bucket', label: 'Index: 5', color: '#ff9800' }, nodeStates: { hash: 'active', bucket: 'active' }, activeConnections: ['h-b'] },
+    { description: '🪣 Bucket empty! Create new Node(hash, "name", "Alice", null)', duration: 1400, nodeStates: { bucket: 'highlight' } },
+    { description: '✅ Stored! If bucket had 8+ nodes, it converts to Red-Black Tree', duration: 1500, packet: { from: 'bucket', to: 'result', label: 'Stored', color: '#4caf50' }, nodeStates: { bucket: 'active', result: 'highlight' }, activeConnections: ['b-n', 'n-r'] },
+    { description: '📊 Load factor > 0.75? → Resize array from 16 to 32, rehash all entries', duration: 1800, nodeStates: { bucket: 'warn', hash: 'warn' } },
+  ],
+};
+
+export const concurrentHashmapSim = {
+  title: 'ConcurrentHashMap — Thread-Safe Operations',
+  description: 'Watch how ConcurrentHashMap handles concurrent access',
+  width: 580, height: 280,
+  nodes: [
+    { id: 't1', x: 70, y: 80, label: 'Thread 1', icon: '🧵' },
+    { id: 't2', x: 70, y: 200, label: 'Thread 2', icon: '🧵' },
+    { id: 'map', x: 300, y: 140, label: 'CHM', icon: '🗺️' },
+    { id: 'b3', x: 490, y: 80, label: 'Bucket[3]', icon: '🪣' },
+    { id: 'b7', x: 490, y: 200, label: 'Bucket[7]', icon: '🪣' },
+  ],
+  connections: [
+    { id: 't1-m', from: 't1', to: 'map' },
+    { id: 't2-m', from: 't2', to: 'map' },
+    { id: 'm-b3', from: 'map', to: 'b3' },
+    { id: 'm-b7', from: 'map', to: 'b7' },
+  ],
+  steps: [
+    { description: '🧵 Thread 1: put("age", 25) → hashes to Bucket[3]', duration: 1400, packet: { from: 't1', to: 'map', label: 'put()', color: '#2196f3' }, nodeStates: { t1: 'active' }, activeConnections: ['t1-m'] },
+    { description: '🧵 Thread 2: put("city", "Mumbai") → hashes to Bucket[7]', duration: 1400, packet: { from: 't2', to: 'map', label: 'put()', color: '#9c27b0' }, nodeStates: { t2: 'active' }, activeConnections: ['t2-m'] },
+    { description: '✅ Different buckets! Both proceed in PARALLEL — no lock contention', duration: 1500, nodeStates: { map: 'highlight' } },
+    { description: '🪣 Thread 1 CAS-locks Bucket[3] only, writes "age"=25', duration: 1400, packet: { from: 'map', to: 'b3', label: 'CAS lock', color: '#4caf50' }, nodeStates: { map: 'active', b3: 'active' }, activeConnections: ['m-b3'] },
+    { description: '🪣 Thread 2 CAS-locks Bucket[7] only, writes "city"="Mumbai"', duration: 1400, packet: { from: 'map', to: 'b7', label: 'CAS lock', color: '#4caf50' }, nodeStates: { map: 'active', b7: 'active' }, activeConnections: ['m-b7'] },
+    { description: '✅ Both done! No global lock — only per-bucket CAS. Max concurrency!', duration: 1600, nodeStates: { t1: 'highlight', t2: 'highlight', b3: 'highlight', b7: 'highlight' } },
+  ],
+};
+
+export const multithreadingSim = {
+  title: 'Multithreading — Thread Pool Execution',
+  description: 'Watch how an ExecutorService manages thread pool',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'submit', x: 70, y: 140, label: 'Submit Tasks', icon: '📋' },
+    { id: 'queue', x: 230, y: 140, label: 'Task Queue', icon: '📬' },
+    { id: 'w1', x: 430, y: 60, label: 'Worker 1', icon: '🧵' },
+    { id: 'w2', x: 430, y: 140, label: 'Worker 2', icon: '🧵' },
+    { id: 'w3', x: 430, y: 220, label: 'Worker 3', icon: '🧵' },
+    { id: 'done', x: 560, y: 140, label: 'Complete', icon: '✅' },
+  ],
+  connections: [
+    { id: 's-q', from: 'submit', to: 'queue' },
+    { id: 'q-w1', from: 'queue', to: 'w1' },
+    { id: 'q-w2', from: 'queue', to: 'w2' },
+    { id: 'q-w3', from: 'queue', to: 'w3' },
+  ],
+  steps: [
+    { description: '📋 Submit 5 tasks to ExecutorService(poolSize=3)', duration: 1400, packet: { from: 'submit', to: 'queue', label: '5 tasks', color: '#2196f3' }, nodeStates: { submit: 'active' }, activeConnections: ['s-q'] },
+    { description: '🧵 Worker 1 picks Task 1 from queue', duration: 1200, packet: { from: 'queue', to: 'w1', label: 'Task 1', color: '#4caf50' }, nodeStates: { queue: 'active', w1: 'active' }, activeConnections: ['q-w1'] },
+    { description: '🧵 Worker 2 picks Task 2, Worker 3 picks Task 3 — all parallel!', duration: 1300, nodeStates: { queue: 'active', w1: 'active', w2: 'active', w3: 'active' }, activeConnections: ['q-w2', 'q-w3'] },
+    { description: '📬 Tasks 4 & 5 wait in queue — all 3 workers busy', duration: 1500, nodeStates: { queue: 'warn', w1: 'active', w2: 'active', w3: 'active' } },
+    { description: '✅ Worker 1 finishes Task 1 → immediately picks Task 4', duration: 1300, packet: { from: 'queue', to: 'w1', label: 'Task 4', color: '#ff9800' }, nodeStates: { w1: 'active', queue: 'active' }, activeConnections: ['q-w1'] },
+    { description: '✅ Worker 2 finishes → picks Task 5. All tasks assigned!', duration: 1300, nodeStates: { w1: 'active', w2: 'active', w3: 'active', queue: 'highlight' } },
+    { description: '✅ All 5 tasks complete! Pool threads return to idle, ready for more', duration: 1500, nodeStates: { w1: 'highlight', w2: 'highlight', w3: 'highlight', done: 'highlight' } },
+  ],
+};
+
+export const completableFutureSim = {
+  title: 'CompletableFuture — Async Pipeline',
+  description: 'Watch how async tasks chain and combine',
+  width: 600, height: 260,
+  nodes: [
+    { id: 'start', x: 70, y: 130, label: 'Start', icon: '▶️' },
+    { id: 'fetch', x: 220, y: 70, label: 'fetchUser()', icon: '👤' },
+    { id: 'orders', x: 220, y: 200, label: 'fetchOrders()', icon: '📦' },
+    { id: 'combine', x: 400, y: 130, label: 'thenCombine()', icon: '🔗' },
+    { id: 'result', x: 540, y: 130, label: 'Response', icon: '✅' },
+  ],
+  connections: [
+    { id: 's-f', from: 'start', to: 'fetch' },
+    { id: 's-o', from: 'start', to: 'orders' },
+    { id: 'f-c', from: 'fetch', to: 'combine' },
+    { id: 'o-c', from: 'orders', to: 'combine' },
+    { id: 'c-r', from: 'combine', to: 'result' },
+  ],
+  steps: [
+    { description: '▶️ Need user profile + orders — fetch BOTH in parallel!', duration: 1400, nodeStates: { start: 'active' } },
+    { description: '👤 supplyAsync(() → fetchUser()) — runs on ForkJoinPool thread', duration: 1300, packet: { from: 'start', to: 'fetch', label: 'Async', color: '#2196f3' }, nodeStates: { start: 'active', fetch: 'active' }, activeConnections: ['s-f'] },
+    { description: '📦 supplyAsync(() → fetchOrders()) — runs on ANOTHER thread simultaneously', duration: 1300, packet: { from: 'start', to: 'orders', label: 'Async', color: '#9c27b0' }, nodeStates: { start: 'active', orders: 'active' }, activeConnections: ['s-o'] },
+    { description: '👤 fetchUser() completes in 200ms', duration: 1200, nodeStates: { fetch: 'highlight' } },
+    { description: '📦 fetchOrders() completes in 350ms', duration: 1200, nodeStates: { orders: 'highlight' } },
+    { description: '🔗 thenCombine() — both done! Merge user + orders into response', duration: 1400, packet: { from: 'fetch', to: 'combine', label: 'User', color: '#4caf50' }, nodeStates: { combine: 'active' }, activeConnections: ['f-c', 'o-c'] },
+    { description: '✅ Total: 350ms (not 550ms!) — parallel execution saved 200ms', duration: 1500, packet: { from: 'combine', to: 'result', label: 'Merged', color: '#4caf50' }, nodeStates: { result: 'highlight', combine: 'highlight' }, activeConnections: ['c-r'] },
+  ],
+};
+
+export const javaMemoryModelSim = {
+  title: 'Java Memory Model — Object Lifecycle',
+  description: 'Watch where objects live and die in JVM memory',
+  width: 600, height: 280,
+  nodes: [
+    { id: 'code', x: 70, y: 140, label: 'new Object()', icon: '📝' },
+    { id: 'stack', x: 230, y: 70, label: 'Stack', icon: '📚' },
+    { id: 'heap', x: 230, y: 210, label: 'Heap (Young)', icon: '🏠' },
+    { id: 'old', x: 420, y: 210, label: 'Heap (Old)', icon: '🏛️' },
+    { id: 'gc', x: 420, y: 70, label: 'GC', icon: '🗑️' },
+  ],
+  connections: [
+    { id: 'c-s', from: 'code', to: 'stack' },
+    { id: 'c-h', from: 'code', to: 'heap' },
+    { id: 'h-o', from: 'heap', to: 'old' },
+    { id: 'gc-h', from: 'gc', to: 'heap' },
+  ],
+  steps: [
+    { description: '📝 User user = new User("Alice") — what happens in memory?', duration: 1500, nodeStates: { code: 'active' } },
+    { description: '📚 Reference "user" stored on Stack (thread-local, fast)', duration: 1400, packet: { from: 'code', to: 'stack', label: 'Reference', color: '#2196f3' }, nodeStates: { code: 'active', stack: 'active' }, activeConnections: ['c-s'] },
+    { description: '🏠 Object data stored on Heap (Young Gen / Eden space)', duration: 1400, packet: { from: 'code', to: 'heap', label: 'Object data', color: '#ff9800' }, nodeStates: { code: 'active', heap: 'active' }, activeConnections: ['c-h'] },
+    { description: '🗑️ Minor GC runs — object still referenced → survives!', duration: 1500, packet: { from: 'gc', to: 'heap', label: 'Minor GC', color: '#9c27b0' }, nodeStates: { gc: 'active', heap: 'warn' }, activeConnections: ['gc-h'] },
+    { description: '🏛️ After surviving 15 GC cycles → promoted to Old Generation', duration: 1500, packet: { from: 'heap', to: 'old', label: 'Promote', color: '#4caf50' }, nodeStates: { heap: 'active', old: 'active' }, activeConnections: ['h-o'] },
+    { description: '📚 Method returns → Stack reference removed → object unreachable', duration: 1400, nodeStates: { stack: 'error', old: 'warn' } },
+    { description: '🗑️ Major GC collects unreachable object → memory freed!', duration: 1500, nodeStates: { gc: 'highlight', old: 'highlight' } },
+  ],
+};
+
+export const java8Sim = completableFutureSim; // streams/lambdas are similar async concept
+export const java17Sim = hashmapSim; // records/sealed classes are similar data structure concept
+export const codingStandardsSim = microservicesPatternsSim; // reuse patterns concept
+export const reactiveSim = completableFutureSim; // reactive is similar async pipeline
